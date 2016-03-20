@@ -47,9 +47,10 @@ namespace SocketBridge
         }
 
 
-        public Packet(uint _id, uint routingKey, Type _type, byte[] _data)
+        public Packet(uint _id, uint _routingKey, Type _type, byte[] _data)
         {
             id = _id;
+            routingKey = _routingKey;
             type = _type;
             size = (uint)_data.LongLength;
             data = _data;
