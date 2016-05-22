@@ -169,13 +169,13 @@ namespace SocketBridge
                         continue;
                     }
 
-                    if (numBytesAvailable >= Packet.HEADER_SIZE)
+                    bool hasIncomingPacket = clientToIncomingPartialPacket.ContainsKey(client);
+                    if (!hasIncomingPacket && numBytesAvailable >= Packet.HEADER_SIZE)
                     {
                         PartialPacket incomingPacket = ReadIncomingPartialPacket(client);
                         clientToIncomingPartialPacket[client] = incomingPacket;
                     }
 
-                    bool hasIncomingPacket = clientToIncomingPartialPacket.ContainsKey(client);
                     if (hasIncomingPacket)
                     {
                         PartialPacket incomingPartialPacket = clientToIncomingPartialPacket[client];
