@@ -174,16 +174,20 @@ namespace SocketBridge
                     {
                         PartialPacket incomingPacket = ReadIncomingPartialPacket(client);
                         clientToIncomingPartialPacket[client] = incomingPacket;
+                        numBytesAvailable -= Packet.HEADER_SIZE;
+                        hasIncomingPacket = true;
                     }
 
                     if (hasIncomingPacket)
                     {
                         PartialPacket incomingPartialPacket = clientToIncomingPartialPacket[client];
 
-                        byte[] incomingBuffer = new byte[Math.Min(numBytesAvailable, incomingPartialPacket.NumDataBytesRemaining)];
-                        int bytesRecv = client.Receive(incomingBuffer, 0, incomingBuffer.Length, SocketFlags.None);
-
-                        incomingPartialPacket.PushDataBytes(incomingBuffer);
+                        if (numBytesAvailable > 0)
+                        {
+                            byte[] incomingBuffer = new byte[Math.Min(numBytesAvailable, incomingPartialPacket.NumDataBytesRemaining)];
+                            int bytesRecv = client.Receive(incomingBuffer, 0, incomingBuffer.Length, SocketFlags.None);
+                            incomingPartialPacket.PushDataBytes(incomingBuffer);
+                        }
 
                         if (incomingPartialPacket.IsPacketComplete)
                         {
